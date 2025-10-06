@@ -53,6 +53,18 @@ final class IgnoredRoutesStorage
             throw new \RuntimeException('Unable to load ignored routes from given file.');
         }
 
+        $routes = array_filter($routes, static function (string $route): bool {
+            return !str_starts_with($route, '#') && '' !== $route;
+        });
+
+        $routes = array_map(static function (string $route): string {
+            if (false === $pos = stripos($route, ' #')) {
+                return $route;
+            }
+
+            return mb_substr($route, 0, $pos);
+        }, $routes);
+
         return array_values(array_unique($routes));
     }
 }

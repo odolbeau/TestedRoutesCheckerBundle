@@ -45,3 +45,7 @@ return [
     Tiime\TestedRoutesCheckerBundle\TiimeTestedRoutesCheckerBundle::class => ['dev' => true, 'test' => true],
 ];
 ```
+
+## Using baseline to ignore some routes
+
+You can ignore some routes with a `.tiime-trc-baseline` file with 1 route per line.

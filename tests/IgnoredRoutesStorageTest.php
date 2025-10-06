@@ -26,8 +26,10 @@ final class IgnoredRoutesStorageTest extends TestCase
         $this->assertSame([], $storage->getRoutes());
 
         $storage->saveRoute('route1');
-        $storage->saveRoute('route2');
+        $storage->saveRoute('route2 # This comment will be ignored');
+        $storage->saveRoute(''); // Empty line will be ignored
         $storage->saveRoute('route3');
+        $storage->saveRoute('# This is a comment which will be ignored');
         $storage->saveRoute('route2');
         $storage->saveRoutes(['route2', 'route4', 'route5']);
 
