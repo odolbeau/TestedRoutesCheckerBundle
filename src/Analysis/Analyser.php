@@ -25,7 +25,13 @@ class Analyser
     {
         $routesToIgnore = array_merge($this->getDefaultRoutesToIgnore(), $routesToIgnore);
 
-        $routes = $this->filterRoutes(array_keys($this->router->getRouteCollection()->all()), $routesToIgnore);
+        $routeNames = [];
+        foreach ($this->router->getRouteCollection()->all() as $routeName => $route) {
+            $routeNames[] = $route->getDefaults()['_canonical_route'] ?? $routeName;
+        }
+        $routeNames = array_unique($routeNames);
+
+        $routes = $this->filterRoutes($routeNames, $routesToIgnore);
         $testedRoutes = $this->filterRoutes(array_unique(array_keys($this->routeStorage->getRoutes())), $routesToIgnore);
 
         $successfullyTestedRoutes = array_keys(array_filter($this->routeStorage->getRoutes(), static function (array $responseCodes): bool {
