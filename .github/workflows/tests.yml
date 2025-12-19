@@ -3,31 +3,18 @@ name: Tests
 
 jobs:
   tests:
-    name: PHPUnit
+    name: PHPUnit - PHP ${{ matrix.php }}, SF ${{ matrix.symfony }} - ${{ matrix.deps }}
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
+        php: [ 8.3, 8.4, 8.5 ]
+        deps: [ highest ]
+        symfony: [ 6.4.*, 7.3.*, 7.4.*, 8.0.* ]
         include:
-          # Lowest Deps
-          - php: 8.2
-            symfony-require: 6.4.*
-            composer-flags: '--prefer-stable --prefer-lowest'
-          # LTS with latest stable PHP
-          - php: 8.2
-            symfony-require: 6.4.*
-            composer-flags: '--prefer-stable'
-          # Active release
           - php: 8.3
-            symfony-require: 7.0.*
-            composer-flags: '--prefer-stable --ignore-platform-req=php+'
-          # Development release
-          - php: nightly
-            symfony-require: 7.1.*@dev
-            composer-flags: '--ignore-platform-req=php+'
-            stability: dev
-            can-fail: true
-      fail-fast: false
+            deps: lowest
+            symfony: '*'
 
     steps:
       - name: Check out repository code
@@ -39,14 +26,13 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none
 
-      - name: Configure Composer minimum stability
-        if: matrix.stability
-        run: composer config minimum-stability ${{ matrix.stability }}
-
       - name: Install dependencies
+        uses: ramsey/composer-install@v3
+        with:
+          dependency-versions: ${{ matrix.deps }}
+          composer-options: --prefer-dist
         env:
-          SYMFONY_REQUIRE: ${{ matrix.symfony-require }}
-        run: composer update ${{ matrix.composer-flags }} --no-interaction --no-progress --optimize-autoloader
+          SYMFONY_REQUIRE: ${{ matrix.symfony }}
 
       - name: Run PHPUnit
         run: vendor/bin/phpunit
