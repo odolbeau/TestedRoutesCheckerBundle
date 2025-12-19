@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Bab\TestedRoutesCheckerBundle\Tests\Command;
 
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Tester\CommandTester;
 use Bab\TestedRoutesCheckerBundle\Analysis\Analyser;
 use Bab\TestedRoutesCheckerBundle\Analysis\AnalysisResult;
 use Bab\TestedRoutesCheckerBundle\Command\CheckCommand;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 
 final class CheckCommandTest extends TestCase
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Bab\TestedRoutesCheckerBundle\Tests\RouteStorage;
 
-use PHPUnit\Framework\TestCase;
 use Bab\TestedRoutesCheckerBundle\RouteStorage\FileRouteStorage;
+use PHPUnit\Framework\TestCase;
 
 final class FileRouteStorageTest extends TestCase
 {

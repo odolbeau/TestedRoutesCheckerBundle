@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Bab\TestedRoutesCheckerBundle\Tests;
 
+use Bab\TestedRoutesCheckerBundle\BabTestedRoutesCheckerBundle;
+use Bab\TestedRoutesCheckerBundle\Command\CheckCommand;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
-use Bab\TestedRoutesCheckerBundle\Command\CheckCommand;
-use Bab\TestedRoutesCheckerBundle\BabTestedRoutesCheckerBundle;
 
 class TestKernel extends Kernel
 {

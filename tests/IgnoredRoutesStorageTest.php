@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Bab\TestedRoutesCheckerBundle\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Bab\TestedRoutesCheckerBundle\IgnoredRoutesStorage;
+use PHPUnit\Framework\TestCase;
 
 final class IgnoredRoutesStorageTest extends TestCase
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Bab\TestedRoutesCheckerBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Bab\TestedRoutesCheckerBundle\RouteStorage\RouteStorageInterface;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 final class KernelRequestListener
 {

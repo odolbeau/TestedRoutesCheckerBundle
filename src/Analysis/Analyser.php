@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Bab\TestedRoutesCheckerBundle\Analysis;
 
-use Symfony\Component\Routing\RouterInterface;
 use Bab\TestedRoutesCheckerBundle\RouteStorage\RouteStorageInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Bab\TestedRoutesCheckerBundle\Tests\Analysis;
 
+use Bab\TestedRoutesCheckerBundle\Analysis\Analyser;
+use Bab\TestedRoutesCheckerBundle\Analysis\AnalysisResult;
+use Bab\TestedRoutesCheckerBundle\RouteStorage\RouteStorageInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
-use Bab\TestedRoutesCheckerBundle\Analysis\Analyser;
-use Bab\TestedRoutesCheckerBundle\Analysis\AnalysisResult;
-use Bab\TestedRoutesCheckerBundle\RouteStorage\RouteStorageInterface;
 
 final class AnalyserTest extends TestCase
 {

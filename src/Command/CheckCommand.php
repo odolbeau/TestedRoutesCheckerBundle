@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Bab\TestedRoutesCheckerBundle\Command;
 
+use Bab\TestedRoutesCheckerBundle\Analysis\Analyser;
+use Bab\TestedRoutesCheckerBundle\IgnoredRoutesStorage;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Bab\TestedRoutesCheckerBundle\Analysis\Analyser;
-use Bab\TestedRoutesCheckerBundle\IgnoredRoutesStorage;
 
 #[AsCommand(
     name: 'bab:tested-routes-checker:check',

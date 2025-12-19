@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Bab\TestedRoutesCheckerBundle\Tests;
 
+use Bab\TestedRoutesCheckerBundle\Command\CheckCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Bab\TestedRoutesCheckerBundle\Command\CheckCommand;
 
 final class FunctionalTest extends TestCase
 {
