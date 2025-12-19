@@ -8,11 +8,11 @@ jobs:
 
     strategy:
       matrix:
-        php: [ 8.3, 8.4, 8.5 ]
+        php: [ 8.2, 8.3, 8.4, 8.5 ]
         deps: [ highest ]
         symfony: [ 6.4.*, 7.3.*, 7.4.*, 8.0.* ]
         include:
-          - php: 8.3
+          - php: 8.2
             deps: lowest
             symfony: '*'
 
