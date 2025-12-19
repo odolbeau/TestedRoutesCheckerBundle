@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tiime\TestedRoutesCheckerBundle\Tests\RouteStorage;
+namespace Bab\TestedRoutesCheckerBundle\Tests\RouteStorage;
 
 use PHPUnit\Framework\TestCase;
-use Tiime\TestedRoutesCheckerBundle\RouteStorage\FileRouteStorage;
+use Bab\TestedRoutesCheckerBundle\RouteStorage\FileRouteStorage;
 
 final class FileRouteStorageTest extends TestCase
 {

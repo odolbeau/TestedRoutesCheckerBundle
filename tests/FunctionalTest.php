@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tiime\TestedRoutesCheckerBundle\Tests;
+namespace Bab\TestedRoutesCheckerBundle\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Tiime\TestedRoutesCheckerBundle\Command\CheckCommand;
+use Bab\TestedRoutesCheckerBundle\Command\CheckCommand;
 
 final class FunctionalTest extends TestCase
 {
@@ -30,7 +30,7 @@ final class FunctionalTest extends TestCase
         $this->assertInstanceOf(Container::class, $container);
 
         $removedServices = array_keys($container->getRemovedIds());
-        $this->assertTrue(\in_array('tiime_tested_routes_checker_bundle.command.check', $removedServices));
+        $this->assertTrue(\in_array('bab_tested_routes_checker_bundle.command.check', $removedServices));
 
         $command = $container->get(CheckCommand::class);
         $this->assertInstanceOf(CheckCommand::class, $command);

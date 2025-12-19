@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tiime\TestedRoutesCheckerBundle\Analysis;
+namespace Bab\TestedRoutesCheckerBundle\Analysis;
 
 use Symfony\Component\Routing\RouterInterface;
-use Tiime\TestedRoutesCheckerBundle\RouteStorage\RouteStorageInterface;
+use Bab\TestedRoutesCheckerBundle\RouteStorage\RouteStorageInterface;
 
 /**
  * @internal

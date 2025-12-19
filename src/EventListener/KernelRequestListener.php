@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tiime\TestedRoutesCheckerBundle\EventListener;
+namespace Bab\TestedRoutesCheckerBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Tiime\TestedRoutesCheckerBundle\RouteStorage\RouteStorageInterface;
+use Bab\TestedRoutesCheckerBundle\RouteStorage\RouteStorageInterface;
 
 final class KernelRequestListener
 {

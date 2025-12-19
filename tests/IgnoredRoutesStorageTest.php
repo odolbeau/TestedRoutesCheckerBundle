@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tiime\TestedRoutesCheckerBundle\Tests;
+namespace Bab\TestedRoutesCheckerBundle\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Tiime\TestedRoutesCheckerBundle\IgnoredRoutesStorage;
+use Bab\TestedRoutesCheckerBundle\IgnoredRoutesStorage;
 
 final class IgnoredRoutesStorageTest extends TestCase
 {

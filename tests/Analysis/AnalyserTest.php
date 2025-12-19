@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tiime\TestedRoutesCheckerBundle\Tests\Analysis;
+namespace Bab\TestedRoutesCheckerBundle\Tests\Analysis;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
-use Tiime\TestedRoutesCheckerBundle\Analysis\Analyser;
-use Tiime\TestedRoutesCheckerBundle\Analysis\AnalysisResult;
-use Tiime\TestedRoutesCheckerBundle\RouteStorage\RouteStorageInterface;
+use Bab\TestedRoutesCheckerBundle\Analysis\Analyser;
+use Bab\TestedRoutesCheckerBundle\Analysis\AnalysisResult;
+use Bab\TestedRoutesCheckerBundle\RouteStorage\RouteStorageInterface;
 
 final class AnalyserTest extends TestCase
 {
