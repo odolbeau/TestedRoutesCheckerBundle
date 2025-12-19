@@ -1,11 +1,11 @@
-# Tiime TestedRoutesCheckerBundle
+# TestedRoutesCheckerBundle
 
 A bundle to ensure all routes of a Symfony application have been tested.
 
 ## How it works?
 
-1. Launch your tests using PHPUnit or anything else. All called routes will be stored in `var/cache/tiime_tested_routes_checker_bundle_route_storage`.
-2. Run `php bin/console tiime:tested-routes-checker:check` to have a small report of what's tested and what's not!
+1. Launch your tests using PHPUnit or anything else. All called routes will be stored in `var/cache/bab_tested_routes_checker_bundle_route_storage`.
+2. Run `php bin/console bab:tested-routes-checker:check` to have a small report of what's tested and what's not!
 
 ## Installation
 
@@ -18,7 +18,7 @@ documentation.
 Open a command console, enter your project directory and execute:
 
 ```console
-composer require tiime/tested-routes-checker-bundle
+composer require bab/tested-routes-checker-bundle
 ```
 
 ### Applications that don't use Symfony Flex
@@ -29,7 +29,7 @@ Open a command console, enter your project directory and execute the
 following command to download the latest stable version of this bundle:
 
 ```console
-composer require tiime/tested-routes-checker-bundle
+composer require bab/tested-routes-checker-bundle
 ```
 
 #### Step 2: Enable the Bundle
@@ -42,10 +42,10 @@ in the `config/bundles.php` file of your project:
 
 return [
     // ...
-    Tiime\TestedRoutesCheckerBundle\TiimeTestedRoutesCheckerBundle::class => ['dev' => true, 'test' => true],
+    Bab\TestedRoutesCheckerBundle\BabTestedRoutesCheckerBundle::class => ['dev' => true, 'test' => true],
 ];
 ```
 
 ## Using baseline to ignore some routes
 
-You can ignore some routes with a `.tiime-trc-baseline` file with 1 route per line.
+You can ignore some routes with a `.bab-trc-baseline` file with 1 route per line.

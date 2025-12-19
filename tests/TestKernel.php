@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tiime\TestedRoutesCheckerBundle\Tests;
+namespace Bab\TestedRoutesCheckerBundle\Tests;
 
+use Bab\TestedRoutesCheckerBundle\BabTestedRoutesCheckerBundle;
+use Bab\TestedRoutesCheckerBundle\Command\CheckCommand;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
-use Tiime\TestedRoutesCheckerBundle\Command\CheckCommand;
-use Tiime\TestedRoutesCheckerBundle\TiimeTestedRoutesCheckerBundle;
 
 class TestKernel extends Kernel
 {
@@ -24,7 +24,7 @@ class TestKernel extends Kernel
     public function registerBundles(): iterable
     {
         yield new FrameworkBundle();
-        yield new TiimeTestedRoutesCheckerBundle();
+        yield new BabTestedRoutesCheckerBundle();
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
@@ -41,7 +41,7 @@ class TestKernel extends Kernel
         $container->addCompilerPass(new class implements CompilerPassInterface {
             public function process(ContainerBuilder $container): void
             {
-                $container->setAlias(CheckCommand::class, 'tiime_tested_routes_checker_bundle.command.check')->setPublic(true);
+                $container->setAlias(CheckCommand::class, 'bab_tested_routes_checker_bundle.command.check')->setPublic(true);
             }
         });
     }

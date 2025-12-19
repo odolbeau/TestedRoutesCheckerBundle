@@ -1,16 +1,16 @@
 {
-    "name": "tiime/tested-routes-checker-bundle",
+    "name": "bab/tested-routes-checker-bundle",
     "description": "A bundle to ensure all routes of a Symfony application have been tested",
     "type": "symfony-bundle",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Tiime\\TestedRoutesCheckerBundle\\": "src/"
+            "Bab\\TestedRoutesCheckerBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tiime\\TestedRoutesCheckerBundle\\Tests\\": "tests/"
+            "Bab\\TestedRoutesCheckerBundle\\Tests\\": "tests/"
         }
     },
     "require": {

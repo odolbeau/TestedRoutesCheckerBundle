@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tiime\TestedRoutesCheckerBundle\Tests\Command;
+namespace Bab\TestedRoutesCheckerBundle\Tests\Command;
 
+use Bab\TestedRoutesCheckerBundle\Analysis\Analyser;
+use Bab\TestedRoutesCheckerBundle\Analysis\AnalysisResult;
+use Bab\TestedRoutesCheckerBundle\Command\CheckCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Tiime\TestedRoutesCheckerBundle\Analysis\Analyser;
-use Tiime\TestedRoutesCheckerBundle\Analysis\AnalysisResult;
-use Tiime\TestedRoutesCheckerBundle\Command\CheckCommand;
 
 final class CheckCommandTest extends TestCase
 {

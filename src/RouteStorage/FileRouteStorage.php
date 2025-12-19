@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tiime\TestedRoutesCheckerBundle\RouteStorage;
+namespace Bab\TestedRoutesCheckerBundle\RouteStorage;
 
 /**
  * @internal

@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Tiime\TestedRoutesCheckerBundle\Command;
+namespace Bab\TestedRoutesCheckerBundle\Command;
 
+use Bab\TestedRoutesCheckerBundle\Analysis\Analyser;
+use Bab\TestedRoutesCheckerBundle\IgnoredRoutesStorage;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Tiime\TestedRoutesCheckerBundle\Analysis\Analyser;
-use Tiime\TestedRoutesCheckerBundle\IgnoredRoutesStorage;
 
 #[AsCommand(
-    name: 'tiime:tested-routes-checker:check',
+    name: 'bab:tested-routes-checker:check',
     description: 'Ensure all routes have been tested during previous PHPUnit run(s).',
 )]
 class CheckCommand extends Command

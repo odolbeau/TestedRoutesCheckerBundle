@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tiime\TestedRoutesCheckerBundle\Analysis;
+namespace Bab\TestedRoutesCheckerBundle\Analysis;
 
 /**
  * @internal
