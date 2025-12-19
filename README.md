@@ -2,6 +2,9 @@
 
 A bundle to ensure all routes of a Symfony application have been tested.
 
+> [!NOTE]
+> This bundle was originally hosted on [Tiime-Software organisation](https://github.com/Tiime-Software/TestedRoutesCheckerBundle). Given the lack of maintenance (see [this PR](https://github.com/Tiime-Software/TestedRoutesCheckerBundle/pull/29) & [this one](https://github.com/Tiime-Software/TestedRoutesCheckerBundle/pull/30)), I decided to create an independant repository in order to give to this project the love it deserves. ♥️
+
 ## How it works?
 
 1. Launch your tests using PHPUnit or anything else. All called routes will be stored in `var/cache/bab_tested_routes_checker_bundle_route_storage`.
