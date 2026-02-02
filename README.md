@@ -49,6 +49,74 @@ return [
 ];
 ```
 
+## Configuring your CI
+
+### Github actions
+
+If you're using Github actions, simply add the following step to your existing test job:
+
+```
+name: Tests
+
+jobs:
+  tests:
+    steps:
+      # Do your stuff
+      # - ...
+      # Ensure no new untested route have been introduced
+      - name: Run Bab/TestedRoutesCheckerBundle
+        run: bin/console bab:tested-routes-checker:check
+```
+
+View a fully working example [in `altercampagne/eventoj` repository](https://github.com/altercampagne/eventoj/blob/main/.github/workflows/tests.yml#L71-L72).
+
+If you have several jobs to run all your tests, that's not a problem! 👌
+
+1. Upload an artifact containing all tested routes after each of your job
+
+```
+jobs:
+  tests:
+    steps:
+      # Do your stuff
+      # - ...
+      - name: Save tested routes
+        uses: actions/upload-artifact@v4
+        with:
+          name: tested-routes-${{ inputs.any-relevant-discriminent }}
+          path: var/cache/bab_tested_routes_checker_bundle_route_storage
+```
+
+2. Run a new job at the end to concatenate all files & run the command
+
+```
+jobs:
+  tested-routes-checker:
+    name: Check tested routes
+    needs: [your_tests_job]
+    steps:
+      # Install the project
+      # - ...
+
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+        path: tested-routes
+        pattern: tested-routes-*
+
+      - name: Create var/cache directory to put tested routes files inside
+        shell: bash
+        run: mkdir -p var/cache
+
+      - name: Merge all tested routes files
+        shell: bash
+        run: cat tested-routes/tested-routes-*/bab_tested_routes_checker_bundle_route_storage > var/cache/bab_tested_routes_checker_bundle_route_storage
+
+      - name: Check tested routes
+        shell: bash
+        run: php bin/console bab:tested-routes-checker:check
+```
+
 ## Using baseline to ignore some routes
 
 You can ignore some routes with a `.bab-trc-baseline` file with 1 route per line.
