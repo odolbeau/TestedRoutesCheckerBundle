@@ -55,7 +55,7 @@ return [
 
 If you're using Github actions, simply add the following step to your existing test job:
 
-```
+```yaml
 name: Tests
 
 jobs:
@@ -74,7 +74,7 @@ If you have several jobs to run all your tests, that's not a problem! 👌
 
 1. Upload an artifact containing all tested routes after each of your job
 
-```
+```yaml
 jobs:
   tests:
     steps:
@@ -89,7 +89,7 @@ jobs:
 
 2. Run a new job at the end to concatenate all files & run the command
 
-```
+```yaml
 jobs:
   tested-routes-checker:
     name: Check tested routes
