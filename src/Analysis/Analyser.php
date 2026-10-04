@@ -27,7 +27,8 @@ class Analyser
 
         $routeNames = [];
         foreach ($this->router->getRouteCollection()->all() as $routeName => $route) {
-            $routeNames[] = $route->getDefaults()['_canonical_route'] ?? $routeName;
+            $canonicalRoute = $route->getDefaults()['_canonical_route'] ?? null;
+            $routeNames[] = \is_string($canonicalRoute) ? $canonicalRoute : $routeName;
         }
         $routeNames = array_unique($routeNames);
 

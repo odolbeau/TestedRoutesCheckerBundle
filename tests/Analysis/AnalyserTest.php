@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Bab\TestedRoutesCheckerBundle\Tests\Analysis;
 
 use Bab\TestedRoutesCheckerBundle\Analysis\Analyser;
-use Bab\TestedRoutesCheckerBundle\Analysis\AnalysisResult;
 use Bab\TestedRoutesCheckerBundle\RouteStorage\RouteStorageInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -50,7 +49,6 @@ final class AnalyserTest extends TestCase
 
         $result = $analyser->run(routesToIgnore: ['ignored_.*']);
 
-        $this->assertInstanceOf(AnalysisResult::class, $result);
         $this->assertSame(['route1', 'route2'], $result->getTestedRoutes());
         $this->assertSame(['route3', 'localized_route_simple_path', 'localized_route_multiple_paths'], $result->getNotTestedRoutes());
         $this->assertSame(['route1'], $result->getSuccessfullyTestedRoutes());
