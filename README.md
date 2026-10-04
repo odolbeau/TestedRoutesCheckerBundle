@@ -117,6 +117,15 @@ jobs:
         run: php bin/console bab:tested-routes-checker:check
 ```
 
+## Running tests in parallel (ParaTest)
+
+Nothing to configure: the bundle works with [ParaTest](https://github.com/paratestphp/paratest) out of the box.
+
+All the worker processes append to the same file (`var/cache/bab_tested_routes_checker_bundle_route_storage` by default), and each write takes an exclusive lock on it (since 1.0.2), so concurrent writes can't be interleaved or lost. Once ParaTest is done, run `bab:tested-routes-checker:check` as usual: it reads the file written by all the workers.
+
+> [!NOTE]
+> The file is never emptied by the bundle, so it keeps the routes of previous runs. Remove it before running your tests if you want a report that only reflects the current run (this is already the case on a fresh CI checkout).
+
 ## Using baseline to ignore some routes
 
 You can ignore some routes with a `.bab-trc-baseline` file with 1 route per line.
