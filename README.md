@@ -1,44 +1,26 @@
 # TestedRoutesCheckerBundle
 
-A bundle to ensure all routes of a Symfony application have been tested.
+[![Tests](https://github.com/odolbeau/TestedRoutesCheckerBundle/actions/workflows/tests.yml/badge.svg)](https://github.com/odolbeau/TestedRoutesCheckerBundle/actions/workflows/tests.yml)
+[![Latest version](https://img.shields.io/packagist/v/bab/tested-routes-checker-bundle)](https://packagist.org/packages/bab/tested-routes-checker-bundle)
 
-> [!NOTE]
-> This bundle was originally hosted on [Tiime-Software organisation](https://github.com/Tiime-Software/TestedRoutesCheckerBundle). Given the lack of maintenance (see [this PR](https://github.com/Tiime-Software/TestedRoutesCheckerBundle/pull/29) & [this one](https://github.com/Tiime-Software/TestedRoutesCheckerBundle/pull/30)), I decided to create an independant repository in order to give to this project the love it deserves. ♥️
+A bundle to ensure all routes of a Symfony application have been tested.
 
 ## How it works?
 
 1. Launch your tests using PHPUnit or anything else. All called routes will be stored in `var/cache/bab_tested_routes_checker_bundle_route_storage`.
 2. Run `php bin/console bab:tested-routes-checker:check` to have a small report of what's tested and what's not!
 
+A route is stored each time a request matching it is handled by the kernel in the `test` environment, along with the status code of the response. This means functional tests (`WebTestCase`, `ApiTestCase`, ...) count, whereas tests which never go through the kernel don't.
+
+A route is considered **tested** as soon as it has been called once, and **successfully tested** if at least one of the responses had a status code lower than 400.
+
 ## Installation
 
-Make sure Composer is installed globally, as explained in the [installation
-chapter](https://getcomposer.org/doc/00-intro.md) of the Composer
-documentation.
-
-### Applications that use Symfony Flex
-
-Open a command console, enter your project directory and execute:
-
 ```console
 composer require --dev bab/tested-routes-checker-bundle
 ```
 
-### Applications that don't use Symfony Flex
-
-#### Step 1: Download the Bundle
-
-Open a command console, enter your project directory and execute the
-following command to download the latest stable version of this bundle:
-
-```console
-composer require --dev bab/tested-routes-checker-bundle
-```
-
-#### Step 2: Enable the Bundle
-
-Then, enable the bundle by adding it to the list of registered bundles
-in the `config/bundles.php` file of your project:
+If your application doesn't use Symfony Flex, also enable the bundle in `config/bundles.php`:
 
 ```php
 // config/bundles.php
@@ -49,11 +31,80 @@ return [
 ];
 ```
 
+## Usage
+
+Run your tests, then:
+
+```console
+php bin/console bab:tested-routes-checker:check
+```
+
+```
+Some routes have not been tested :
+
+ * admin_dashboard
+ * api_user_delete
+
+ [ERROR] Found 2 non tested routes!
+```
+
+The command exits with a non-zero code if at least one route has not been tested, which makes it suitable for a CI. Routes which have been called but which always returned a 4xx or 5xx code are reported as well, and also make the command fail (unless you use `-S`, see below).
+
+| Option | Description |
+| --- | --- |
+| `-m`, `--maximum-routes-to-display` | Maximum number of routes to display per section (default: `25`). |
+| `-i`, `--routes-to-ignore` | Path to the file containing the routes to ignore (default: `.bab-trc-baseline`). |
+| `-g`, `--generate-baseline` | Generate the file containing the routes to ignore (see [below](#using-baseline-to-ignore-some-routes)). |
+| `-S`, `--ignore-not-successfully-tested-routes` | Don't fail if a route has been called but never returned a 1xx, 2xx or 3xx code. |
+
+## Configuration
+
+The bundle works without any configuration. The following options are available (default values are displayed):
+
+```yaml
+# config/packages/bab_tested_routes_checker.yaml
+bab_tested_routes_checker:
+    maximum_number_of_routes_to_display: 25
+    routes_to_ignore_file: '%kernel.project_dir%/.bab-trc-baseline'
+    route_storage_file: '%kernel.project_dir%/var/cache/bab_tested_routes_checker_bundle_route_storage'
+```
+
+## Using baseline to ignore some routes
+
+You can ignore some routes with a `.bab-trc-baseline` file with 1 route per line. Each line is either a route name or a regular expression (`api_.*`). Empty lines and comments (a line starting with `#`, or the part of a line after ` #`) are ignored.
+
+```
+# Routes of the legacy admin, to be removed soon
+admin_legacy_.*
+healthcheck # called by the infrastructure only
+```
+
+To create the file from the current state of your application, run your tests and then:
+
+```console
+php bin/console bab:tested-routes-checker:check --generate-baseline
+```
+
+The file is overwritten with the routes which have not been tested and which are not already ignored, so its previous content (entries and comments) is lost: generate it once, then edit it by hand. With `-S`, the routes which have only returned 4xx or 5xx codes are added too.
+
+The following routes are always ignored: `_profiler*`, `_wdt*`, `_webhook_controller`, `_preview_error` and `app.swagger`.
+
+## Running tests in parallel (ParaTest)
+
+Nothing to configure: the bundle works with [ParaTest](https://github.com/paratestphp/paratest) out of the box.
+
+All the worker processes append to the same file (`var/cache/bab_tested_routes_checker_bundle_route_storage` by default), and each write takes an exclusive lock on it (since 1.0.2), so concurrent writes can't be interleaved or lost. Once ParaTest is done, run `bab:tested-routes-checker:check` as usual: it reads the file written by all the workers.
+
+> [!NOTE]
+> The file is never emptied by the bundle, so it keeps the routes of previous runs. Remove it before running your tests if you want a report that only reflects the current run (this is already the case on a fresh CI checkout).
+
 ## Configuring your CI
 
-### Github actions
+Whatever your CI is, run `php bin/console bab:tested-routes-checker:check` after your tests: it fails if a route has not been tested.
 
-If you're using Github actions, simply add the following step to your existing test job:
+### GitHub Actions
+
+If you're using GitHub Actions, simply add the following step to your existing test job:
 
 ```yaml
 name: Tests
@@ -63,7 +114,7 @@ jobs:
     steps:
       # Do your stuff
       # - ...
-      # Ensure no new untested route have been introduced
+      # Ensure no new untested route has been introduced
       - name: Run Bab/TestedRoutesCheckerBundle
         run: bin/console bab:tested-routes-checker:check
 ```
@@ -101,8 +152,8 @@ jobs:
       - name: Download All Artifacts
         uses: actions/download-artifact@v4
         with:
-        path: tested-routes
-        pattern: tested-routes-*
+          path: tested-routes
+          pattern: tested-routes-*
 
       - name: Create var/cache directory to put tested routes files inside
         shell: bash
@@ -117,15 +168,7 @@ jobs:
         run: php bin/console bab:tested-routes-checker:check
 ```
 
-## Running tests in parallel (ParaTest)
-
-Nothing to configure: the bundle works with [ParaTest](https://github.com/paratestphp/paratest) out of the box.
-
-All the worker processes append to the same file (`var/cache/bab_tested_routes_checker_bundle_route_storage` by default), and each write takes an exclusive lock on it (since 1.0.2), so concurrent writes can't be interleaved or lost. Once ParaTest is done, run `bab:tested-routes-checker:check` as usual: it reads the file written by all the workers.
+## History
 
 > [!NOTE]
-> The file is never emptied by the bundle, so it keeps the routes of previous runs. Remove it before running your tests if you want a report that only reflects the current run (this is already the case on a fresh CI checkout).
-
-## Using baseline to ignore some routes
-
-You can ignore some routes with a `.bab-trc-baseline` file with 1 route per line.
+> This bundle was originally hosted on [Tiime-Software organisation](https://github.com/Tiime-Software/TestedRoutesCheckerBundle). Given the lack of maintenance (see [this PR](https://github.com/Tiime-Software/TestedRoutesCheckerBundle/pull/29) & [this one](https://github.com/Tiime-Software/TestedRoutesCheckerBundle/pull/30)), I decided to create an independent repository in order to give to this project the love it deserves. ♥️
