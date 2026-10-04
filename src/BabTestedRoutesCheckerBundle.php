@@ -13,7 +13,6 @@ class BabTestedRoutesCheckerBundle extends AbstractBundle
 {
     public function configure(DefinitionConfigurator $definition): void
     {
-        /* @phpstan-ignore-next-line */
         $definition->rootNode()
             ->children()
                 ->integerNode('maximum_number_of_routes_to_display')->defaultValue(25)->end()
