@@ -1,4 +1,10 @@
-on: [pull_request]
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # Every Monday at 06:00 UTC. There is no composer.lock, so this catches
+    # breakages caused by new releases of dependencies (e.g. Symfony 8.1).
+    - cron: '0 6 * * 1'
 name: Tests
 
 jobs:
