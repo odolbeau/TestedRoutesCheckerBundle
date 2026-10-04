@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bab\TestedRoutesCheckerBundle\Analysis;
 
+use Bab\TestedRoutesCheckerBundle\RouteMatcher;
 use Bab\TestedRoutesCheckerBundle\RouteStorage\RouteStorageInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -64,13 +65,8 @@ class Analyser
     {
         $filteredRoutes = [];
         foreach ($routes as $route) {
-            if (\in_array($route, $routesToIgnore)) {
+            if (RouteMatcher::matchesAny($route, $routesToIgnore)) {
                 continue;
-            }
-            foreach ($routesToIgnore as $routeToIgnore) {
-                if (@preg_match("#\b$routeToIgnore\b#", $route)) {
-                    continue 2;
-                }
             }
 
             $filteredRoutes[] = $route;

@@ -85,7 +85,7 @@ To create the file from the current state of your application, run your tests an
 php bin/console bab:tested-routes-checker:check --generate-baseline
 ```
 
-The file is overwritten with the routes which have not been tested and which are not already ignored, so its previous content (entries and comments) is lost: generate it once, then edit it by hand. With `-S`, the routes which have only returned 4xx or 5xx codes are added too.
+If the file already exists, it is updated rather than overwritten: the entries which are still useful (they match at least one route which would otherwise be reported) are kept as is, comments included, the untested routes which are not covered yet are appended, and the entries which are no longer useful (route removed or now tested) are deleted. Lines containing only a comment are always kept. With `-S`, the routes which have only returned 4xx or 5xx codes are handled like the untested ones.
 
 The following routes are always ignored: `_profiler*`, `_wdt*`, `_webhook_controller`, `_preview_error` and `app.swagger`.
 
