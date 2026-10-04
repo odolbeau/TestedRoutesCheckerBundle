@@ -3,18 +3,24 @@ name: Tests
 
 jobs:
   tests:
-    name: PHPUnit - PHP ${{ matrix.php }}, SF ${{ matrix.symfony }} - ${{ matrix.deps }}
-    runs-on: ubuntu-latest
+    name: PHPUnit - ${{ matrix.os }}, PHP ${{ matrix.php }}, SF ${{ matrix.symfony }} - ${{ matrix.deps }}
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
+        os: [ ubuntu-latest ]
         php: [ 8.4, 8.5 ]
         deps: [ highest ]
         symfony: [ 6.4.*, 7.3.*, 7.4.*, 8.0.* ]
         include:
-          - php: 8.4
+          - os: ubuntu-latest
+            php: 8.4
             deps: lowest
             symfony: '*'
+          - os: windows-latest
+            php: 8.5
+            deps: highest
+            symfony: 8.0.*
 
     steps:
       - name: Check out repository code
