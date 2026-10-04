@@ -17,11 +17,7 @@ final class FileRouteStorage implements RouteStorageInterface
     #[\Override]
     public function saveRoute(string $route, int $statusCode): void
     {
-        if (!file_exists($this->file)) {
-            touch($this->file);
-        }
-
-        file_put_contents($this->file, "$route|$statusCode\n", \FILE_APPEND);
+        file_put_contents($this->file, "$route|$statusCode\n", \FILE_APPEND | \LOCK_EX);
     }
 
     #[\Override]

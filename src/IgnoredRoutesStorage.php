@@ -21,11 +21,7 @@ final class IgnoredRoutesStorage
 
     public function saveRoute(string $route): void
     {
-        if (!file_exists($this->file)) {
-            touch($this->file);
-        }
-
-        file_put_contents($this->file, "$route\n", \FILE_APPEND);
+        file_put_contents($this->file, "$route\n", \FILE_APPEND | \LOCK_EX);
     }
 
     /**
@@ -33,11 +29,7 @@ final class IgnoredRoutesStorage
      */
     public function saveRoutes(array $routes): void
     {
-        if (!file_exists($this->file)) {
-            touch($this->file);
-        }
-
-        file_put_contents($this->file, implode(\PHP_EOL, $routes), \FILE_APPEND);
+        file_put_contents($this->file, implode(\PHP_EOL, $routes), \FILE_APPEND | \LOCK_EX);
     }
 
     /**

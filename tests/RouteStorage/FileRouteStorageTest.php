@@ -24,4 +24,29 @@ final class FileRouteStorageTest extends TestCase
             'route3' => [403],
         ], $storage->getRoutes());
     }
+
+    public function testConcurrentWritesDoNotLoseOrCorruptRoutes(): void
+    {
+        $file = __DIR__.'/../../var/cache/test_cache_file_'.bin2hex(random_bytes(5));
+        $script = \sprintf(
+            '$s = new %s(%s); for ($i = 0; $i < 200; ++$i) { $s->saveRoute("route", 200); }',
+            '\\'.FileRouteStorage::class,
+            var_export($file, true),
+        );
+
+        $processes = [];
+        for ($i = 0; $i < 4; ++$i) {
+            $processes[] = proc_open(
+                [\PHP_BINARY, '-r', 'require '.var_export(__DIR__.'/../../vendor/autoload.php', true).';'.$script],
+                [],
+                $pipes,
+            );
+        }
+        foreach ($processes as $process) {
+            $this->assertIsResource($process);
+            proc_close($process);
+        }
+
+        $this->assertCount(800, (new FileRouteStorage($file))->getRoutes()['route']);
+    }
 }
