@@ -35,4 +35,16 @@ final class IgnoredRoutesStorageTest extends TestCase
 
         $this->assertSame(['route1', 'route2', 'route3', 'route4', 'route5'], $storage->getRoutes());
     }
+
+    public function testSuccessiveSaveRoutesDoNotMergeLines(): void
+    {
+        $storage = new IgnoredRoutesStorage(__DIR__.'/../var/cache/test_ignored_routes_'.bin2hex(random_bytes(5)));
+
+        $storage->saveRoutes(['route1', 'route2']);
+        $storage->saveRoutes([]);
+        $storage->saveRoutes(['route3', 'route4']);
+        $storage->saveRoute('route5');
+
+        $this->assertSame(['route1', 'route2', 'route3', 'route4', 'route5'], $storage->getRoutes());
+    }
 }

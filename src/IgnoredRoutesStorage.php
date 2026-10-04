@@ -29,7 +29,11 @@ final class IgnoredRoutesStorage
      */
     public function saveRoutes(array $routes): void
     {
-        file_put_contents($this->file, implode(\PHP_EOL, $routes), \FILE_APPEND | \LOCK_EX);
+        if ([] === $routes) {
+            return;
+        }
+
+        file_put_contents($this->file, implode("\n", $routes)."\n", \FILE_APPEND | \LOCK_EX);
     }
 
     /**
