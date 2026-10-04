@@ -83,4 +83,45 @@ final class CheckCommandTest extends TestCase
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('[WARNING] Found 2 routes which are not successfully tested', $output);
     }
+
+    public function testGenerateBaselineKeepsUsefulEntriesAndRemovesUselessOnes(): void
+    {
+        $file = sys_get_temp_dir().'/trc_baseline_'.bin2hex(random_bytes(5));
+        file_put_contents($file, "# Legacy\na # still untested\ntested\ngone\n^admin_.*\na\n");
+
+        $analyser = $this->createMock(Analyser::class);
+        $analyser->method('run')->willReturn(new AnalysisResult(
+            routes: ['a', 'b', 'c', 'tested', 'admin_x'],
+            testedRoutes: ['tested'],
+            successfullyTestedRoutes: ['tested'],
+        ));
+
+        $commandTester = new CommandTester(new CheckCommand($analyser, 10, $file));
+        $commandTester->execute(['--generate-baseline' => true]);
+
+        $commandTester->assertCommandIsSuccessful();
+        $this->assertSame("# Legacy\na # still untested\n^admin_.*\nb\nc\n", file_get_contents($file));
+        $this->assertStringContainsString('2 kept, 2 added, 3 removed', $commandTester->getDisplay());
+
+        unlink($file);
+    }
+
+    public function testGenerateBaselineCreatesMissingFile(): void
+    {
+        $file = sys_get_temp_dir().'/trc_baseline_'.bin2hex(random_bytes(5));
+
+        $analyser = $this->createMock(Analyser::class);
+        $analyser->method('run')->willReturn(new AnalysisResult(
+            routes: ['a', 'b'],
+            testedRoutes: ['b'],
+            successfullyTestedRoutes: [],
+        ));
+
+        $commandTester = new CommandTester(new CheckCommand($analyser, 10, $file));
+        $commandTester->execute(['--generate-baseline' => true, '--ignore-not-successfully-tested-routes' => true]);
+
+        $this->assertSame("a\nb\n", file_get_contents($file));
+
+        unlink($file);
+    }
 }

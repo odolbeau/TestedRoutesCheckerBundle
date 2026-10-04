@@ -6,6 +6,7 @@ namespace Bab\TestedRoutesCheckerBundle\Command;
 
 use Bab\TestedRoutesCheckerBundle\Analysis\Analyser;
 use Bab\TestedRoutesCheckerBundle\IgnoredRoutesStorage;
+use Bab\TestedRoutesCheckerBundle\RouteMatcher;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -65,17 +66,7 @@ class CheckCommand extends Command
 
         // If the goal is to generate the baseline, we do it and go out!
         if ($input->getOption('generate-baseline')) {
-            $ignoredRoutesStorage->reset();
-            $ignoredRoutesStorage->saveRoutes($result->getNotTestedRoutes());
-
-            $count = \count($result->getNotTestedRoutes());
-
-            if ($ignoreNotSuccessfullyTestedRoutes) {
-                $ignoredRoutesStorage->saveRoutes($result->getNotSuccessfullyTestedRoutes());
-                $count += \count($result->getNotSuccessfullyTestedRoutes());
-            }
-
-            $io->writeln(\sprintf('%d routes saved in %s', $count, $routesToIgnoreFile));
+            $this->generateBaseline($io, $ignoredRoutesStorage, $routesToIgnoreFile, $ignoreNotSuccessfullyTestedRoutes);
 
             return Command::SUCCESS;
         }
@@ -91,6 +82,60 @@ class CheckCommand extends Command
         $io->success('Congrats, all routes have been tested!');
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Keeps the existing entries (and comments) which are still useful, removes the others
+     * and appends the routes which are not covered yet.
+     */
+    private function generateBaseline(SymfonyStyle $io, IgnoredRoutesStorage $storage, string $file, bool $ignoreNotSuccessfullyTestedRoutes): void
+    {
+        // Only the default ignored routes apply here: we want every route which would be reported without the baseline.
+        $result = $this->analyser->run([]);
+
+        $candidates = $result->getNotTestedRoutes();
+        if ($ignoreNotSuccessfullyTestedRoutes) {
+            $candidates = array_merge($candidates, $result->getNotSuccessfullyTestedRoutes());
+        }
+
+        try {
+            $existingLines = $storage->getLines();
+        } catch (\InvalidArgumentException) {
+            $existingLines = [];
+        }
+
+        $lines = [];
+        $kept = [];
+        $removed = 0;
+        foreach ($existingLines as [$line, $route]) {
+            if (null === $route) {
+                $lines[] = $line;
+
+                continue;
+            }
+
+            $isUseful = [] !== array_filter($candidates, static fn (string $candidate): bool => RouteMatcher::matchesAny($candidate, [$route]));
+            if (!$isUseful || \in_array($route, $kept, true)) {
+                ++$removed;
+
+                continue;
+            }
+
+            $kept[] = $route;
+            $lines[] = $line;
+        }
+
+        $added = 0;
+        foreach (array_unique($candidates) as $candidate) {
+            if (!RouteMatcher::matchesAny($candidate, $kept)) {
+                $lines[] = $candidate;
+                ++$added;
+            }
+        }
+
+        $storage->rewrite($lines);
+
+        $io->writeln(\sprintf('%s updated: %d kept, %d added, %d removed', $file, \count($kept), $added, $removed));
     }
 
     /**

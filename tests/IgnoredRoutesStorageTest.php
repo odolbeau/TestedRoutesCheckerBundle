@@ -47,4 +47,22 @@ final class IgnoredRoutesStorageTest extends TestCase
 
         $this->assertSame(['route1', 'route2', 'route3', 'route4', 'route5'], $storage->getRoutes());
     }
+
+    public function testGetLinesAndRewrite(): void
+    {
+        $storage = new IgnoredRoutesStorage(__DIR__.'/../var/cache/test_ignored_routes_'.bin2hex(random_bytes(5)));
+
+        $storage->rewrite(['# comment', 'route1 # inline', '', 'route2']);
+
+        $this->assertSame([
+            ['# comment', null],
+            ['route1 # inline', 'route1'],
+            ['', null],
+            ['route2', 'route2'],
+        ], $storage->getLines());
+        $this->assertSame(['route1', 'route2'], $storage->getRoutes());
+
+        $storage->rewrite([]);
+        $this->assertSame([], $storage->getLines());
+    }
 }

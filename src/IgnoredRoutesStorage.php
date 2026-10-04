@@ -41,26 +41,52 @@ final class IgnoredRoutesStorage
      */
     public function getRoutes(): array
     {
+        $routes = [];
+        foreach ($this->getLines() as [, $route]) {
+            if (null !== $route) {
+                $routes[] = $route;
+            }
+        }
+
+        return array_values(array_unique($routes));
+    }
+
+    /**
+     * Returns every line of the file as a [raw line, route] pair.
+     * The route is null for empty lines and full line comments.
+     *
+     * @return list<array{string, string|null}>
+     */
+    public function getLines(): array
+    {
         if (!file_exists($this->file)) {
             throw new \InvalidArgumentException("File \"{$this->file}\"does not exists, unable to load ignored routes!");
         }
 
-        if (false === $routes = @file($this->file, \FILE_IGNORE_NEW_LINES)) {
+        if (false === $lines = @file($this->file, \FILE_IGNORE_NEW_LINES)) {
             throw new \RuntimeException('Unable to load ignored routes from given file.');
         }
 
-        $routes = array_filter($routes, static function (string $route): bool {
-            return !str_starts_with($route, '#') && '' !== $route;
-        });
-
-        $routes = array_map(static function (string $route): string {
-            if (false === $pos = stripos($route, ' #')) {
-                return $route;
+        return array_map(static function (string $line): array {
+            if ('' === $line || str_starts_with($line, '#')) {
+                return [$line, null];
             }
 
-            return mb_substr($route, 0, $pos);
-        }, $routes);
+            if (false === $pos = stripos($line, ' #')) {
+                return [$line, $line];
+            }
 
-        return array_values(array_unique($routes));
+            return [$line, mb_substr($line, 0, $pos)];
+        }, $lines);
+    }
+
+    /**
+     * Replaces the whole content of the file.
+     *
+     * @param string[] $lines
+     */
+    public function rewrite(array $lines): void
+    {
+        file_put_contents($this->file, [] === $lines ? '' : implode("\n", $lines)."\n", \LOCK_EX);
     }
 }
