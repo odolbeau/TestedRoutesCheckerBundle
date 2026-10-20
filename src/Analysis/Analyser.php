@@ -86,6 +86,7 @@ class Analyser
             '_webhook_controller',
             '_preview_error',
             'app.swagger',
+            'ux_autocomplete',
         ];
     }
 }
